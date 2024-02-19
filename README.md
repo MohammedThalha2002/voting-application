@@ -1,5 +1,7 @@
 # Voting Application - Documentation
 
+For detailed documentation, please refer to our [Notion Documentation](https://billowy-tendency-afc.notion.site/Voting-Application-Documentation-83e595b7bdd94c49956753733b014b17).
+
 ## TECHNOLOGIES USED
 
 - JETPACK COMPOSE
