@@ -108,7 +108,7 @@ fun ResultPage(navController: NavController){
                 Spacer(modifier = Modifier
                     .height(10.dp)
                     .width(10.dp))
-                Text(text = "Result status  ${resultViewModel.votingStatus}")
+//                Text(text = "Result status  ${resultViewModel.votingStatus}")
                 if(resultViewModel.votingStatus == "ENDED"){
                     Text(text = "The winner of this election is",
                         fontSize = 20.sp,

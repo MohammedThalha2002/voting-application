@@ -123,9 +123,9 @@ fun HomePage(navController: NavController, username : String, scrollState: Scrol
             }
             Spacer(modifier = Modifier.height(20.dp))
             Text(text = "Select the party to vote", fontSize = 18.sp, fontWeight = FontWeight.Bold)
-            Text(text = "ID : ${user.userId}", fontSize = 18.sp, fontWeight = FontWeight.Bold)
-            Text(text = "NAME : ${user.name}", fontSize = 18.sp, fontWeight = FontWeight.Bold)
-            Text(text = "Voted : ${user.isVoted}", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+//            Text(text = "ID : ${user.userId}", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+//            Text(text = "NAME : ${user.name}", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+//            Text(text = "Voted : ${user.isVoted}", fontSize = 18.sp, fontWeight = FontWeight.Bold)
             Column{
                 homeViewModel.parties.forEach{party ->
                     VotingPartyCards(party, homeViewModel)
