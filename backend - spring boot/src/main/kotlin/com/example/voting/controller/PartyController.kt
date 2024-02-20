@@ -1,15 +1,9 @@
 package com.example.voting.controller
 
-import com.example.voting.common.CustomException
 import com.example.voting.dao.HttpResponse
 import com.example.voting.entity.Party
-import com.example.voting.entity.User
-import com.example.voting.entity.VotingResult
-import com.example.voting.repository.PartyRepository
-import com.example.voting.repository.UserRepository
 import com.example.voting.services.PartyServices
 import org.springframework.web.bind.annotation.*
-import java.util.Optional
 
 @RestController
 class PartyController(val partyServices: PartyServices) {
