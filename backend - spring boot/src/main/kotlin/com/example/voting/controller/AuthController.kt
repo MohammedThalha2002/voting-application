@@ -1,12 +1,8 @@
 package com.example.voting.controller
 
-import com.example.voting.common.CustomException
 import com.example.voting.dao.HttpResponse
 import com.example.voting.entity.User
-import com.example.voting.repository.UserRepository
-import com.example.voting.services.AuthServices
-import org.springframework.web.bind.annotation.DeleteMapping
-import org.springframework.web.bind.annotation.PathVariable
+import com.example.voting.services.AuthService
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -14,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/auth")
-class AuthController(val authServices: AuthServices) {
+class AuthController(val authServices: AuthService) {
 
     @PostMapping("/sign-in")
     fun signIn(@RequestBody user: User) : HttpResponse {

@@ -1,4 +1,4 @@
-package com.example.voting.services.Impl
+package com.example.voting.services.impl
 
 import com.example.voting.common.CustomException
 import com.example.voting.dao.HttpResponse
@@ -7,12 +7,12 @@ import com.example.voting.entity.User
 import com.example.voting.entity.VotingResult
 import com.example.voting.repository.PartyRepository
 import com.example.voting.repository.UserRepository
-import com.example.voting.services.PartyServices
+import com.example.voting.services.PartyService
 import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
-class PartyServiceImpl(val partyRepository: PartyRepository, val userRepository: UserRepository) : PartyServices {
+class PartyServiceImpl(val partyRepository: PartyRepository, val userRepository: UserRepository) : PartyService {
     override fun getAllUsers(): List<Party> {
         try {
             return partyRepository.findAll()

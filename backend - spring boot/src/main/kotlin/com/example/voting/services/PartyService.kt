@@ -5,7 +5,7 @@ import com.example.voting.entity.Party
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestBody
 
-interface PartyServices {
+interface PartyService {
     fun getAllUsers(): List<Party>
     fun addParty(@RequestBody party: Party): HttpResponse
     fun deleteParty(@PathVariable partyId : Long): HttpResponse

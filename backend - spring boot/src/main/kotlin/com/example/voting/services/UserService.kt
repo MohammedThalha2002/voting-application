@@ -5,7 +5,7 @@ import com.example.voting.entity.User
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestBody
 
-interface UserServices {
+interface UserService {
     fun getAllUsers(): List<User>
     fun findUserById(userName : String) : User
     fun postUser(@RequestBody user: User) : User

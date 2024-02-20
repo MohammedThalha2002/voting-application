@@ -11,6 +11,6 @@ class User(
     @GeneratedValue(strategy = GenerationType.AUTO)
     val userId : Long,
     val name : String,
-    val password : String,
+    var password : String,
     var isVoted : Boolean = false
 )
