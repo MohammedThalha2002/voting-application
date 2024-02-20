@@ -7,72 +7,35 @@ import com.example.voting.entity.User
 import com.example.voting.entity.VotingResult
 import com.example.voting.repository.PartyRepository
 import com.example.voting.repository.UserRepository
+import com.example.voting.services.PartyServices
 import org.springframework.web.bind.annotation.*
 import java.util.Optional
 
 @RestController
-class PartyController(val partyRepository : PartyRepository, val userRepository : UserRepository) {
+class PartyController(val partyServices: PartyServices) {
 
     @GetMapping("/parties")
     fun getAllUsers(): List<Party> {
-        try {
-            return partyRepository.findAll()
-        } catch (ex: Exception) {
-            throw CustomException(ex.message.toString())
-        }
+        return partyServices.getAllUsers()
     }
 
     @PostMapping("/party")
     fun addParty(@RequestBody party: Party): HttpResponse {
-        // checking for party name existence
-        val foundParty : List<Party> = partyRepository.findByPartyName(party.partyName)
-
-        if(foundParty.isEmpty()){
-            partyRepository.save(party)
-            return HttpResponse(message = "Party added successfully")
-        }
-
-        throw CustomException(message = "Party name already exists")
+        return partyServices.addParty(party)
     }
 
     @DeleteMapping("/party/{partyId}")
-    fun deleteUser(@PathVariable partyId : Long): HttpResponse {
-        val party : Optional<Party> = partyRepository.findById(partyId);
-        if(!party.isEmpty){
-            partyRepository.delete(party.get())
-            return HttpResponse(message = "Party deleted successfully")
-        }
-
-        throw CustomException(message = "Party not found")
+    fun deleteParty(@PathVariable partyId : Long): HttpResponse {
+        return partyServices.deleteParty(partyId)
     }
 
     @GetMapping("/voting/status")
-    fun getVotingStatus(): HttpResponse{
-        return HttpResponse(message = VotingResult.status)
+    fun getVotingStatus(): HttpResponse {
+        return partyServices.getVotingStatus()
     }
 
     @PostMapping("/voting/status/{status}")
-    fun changeVotingStatus(@PathVariable status : String) : HttpResponse{
-        VotingResult.status = status
-        val users : List<User> = userRepository.findAll()
-        val parties : List<Party> = partyRepository.findAll()
-        if(status == "STARTED"){
-            // change all users isVoting field to false
-            for(user in users){
-                user.isVoted = false
-            }
-            // change all party totalVotes to zero
-            for (party in parties){
-                party.totalVotes = 0
-            }
-        } else if(status == "ENDED") {
-            // change all users isVoting field to true
-            for(user in users){
-                user.isVoted = true
-            }
-        }
-        userRepository.saveAll(users)
-        partyRepository.saveAll(parties)
-        return HttpResponse(message = VotingResult.status)
+    fun changeVotingStatus(@PathVariable status : String) : HttpResponse {
+        return partyServices.changeVotingStatus(status)
     }
 }
