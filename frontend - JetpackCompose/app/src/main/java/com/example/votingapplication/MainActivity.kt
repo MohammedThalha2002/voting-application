@@ -42,7 +42,7 @@ class MainActivity : ComponentActivity() {
 
                     NavHost(navController = navController, startDestination = "login") {
                         composable("login") { LoginPage(navController) }
-                        composable("admin-panel") { AdminPanel(navController) }
+                        composable("admin-panel") { AdminPanel(navController, scrollState) }
                         composable("home/{userId}") {backStackEntry ->
                             val userId : String = backStackEntry.arguments?.getString("userId") ?: ""
                             HomePage(navController, userId, scrollState)

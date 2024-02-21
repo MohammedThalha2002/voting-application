@@ -79,4 +79,6 @@ dependencies {
     implementation("com.squareup.okhttp3:logging-interceptor:4.10.0")
     // CONFETTI
     implementation("nl.dionsegijn:konfetti-compose:2.0.4")
+    //
+    implementation("com.google.accompanist:accompanist-flowlayout:0.20.0")
 }

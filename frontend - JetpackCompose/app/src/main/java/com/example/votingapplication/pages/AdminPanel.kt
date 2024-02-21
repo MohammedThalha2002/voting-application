@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.drawable.Icon
 import android.util.Log
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -24,10 +25,12 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -50,22 +53,29 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.votingapplication.components.AlertDialogBox
 import com.example.votingapplication.entity.Party
 import com.example.votingapplication.utils.generateRandomColor
 import com.example.votingapplication.viewModels.AdminViewModel
+import com.google.accompanist.flowlayout.FlowMainAxisAlignment
+import com.google.accompanist.flowlayout.FlowRow
+import com.google.accompanist.flowlayout.SizeMode
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun AdminPanel(navController: NavController){
+fun AdminPanel(navController: NavController, scrollState: ScrollState){
 
     val adminViewModel : AdminViewModel = viewModel<AdminViewModel>()
 
@@ -90,6 +100,7 @@ fun AdminPanel(navController: NavController){
                 containerColor = generateRandomColor()[5],
                 titleContentColor = Color.White,
             ),
+            modifier = Modifier.zIndex(1f),
             title = { Text("Admin Panel") },
             navigationIcon = {
                 IconButton(onClick = {
@@ -103,10 +114,24 @@ fun AdminPanel(navController: NavController){
                 }
             },
         )
+        if(adminViewModel.showDialog){
+            AlertDialogBox(
+                onDismissRequest = { adminViewModel.showDialog = false },
+                onConfirmation = {
+                    adminViewModel.deleteParty(context)
+                    adminViewModel.showDialog = false
+                    println("Deleted Successfully") // Add logic here to handle confirmation.
+                },
+                dialogTitle = "Delete the Party",
+                dialogText = "Do you want to delete the party ${adminViewModel.selectedParty!!.partyName}",
+                icon = Icons.Default.Delete
+            )
+        }
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight()
+                .verticalScroll(state = scrollState)
                 .padding(all = 12.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
@@ -146,21 +171,15 @@ fun AdminPanel(navController: NavController){
                 Text(text = "Add Party")
             }
             Spacer(modifier = Modifier.height(10.dp))
-            LazyVerticalGrid(
-                columns = GridCells.Adaptive(minSize = 128.dp),
-                contentPadding = PaddingValues(
-                    start = 8.dp,
-                    top = 8.dp,
-                    end = 8.dp,
-                    bottom = 8.dp
-                ),
-                content = {
-                    items(parties) { party ->
-                        PartyCards(party, adminViewModel, context)
-                    }
-                },
-                modifier = Modifier.fillMaxSize()
-                )
+            val itemSize: Dp = (LocalConfiguration.current.screenWidthDp.dp / 2) - 25.dp
+            FlowRow(
+                mainAxisSize = SizeMode.Expand,
+                mainAxisAlignment = FlowMainAxisAlignment.SpaceBetween
+            ) {
+                for (party in parties) {
+                    PartyCards(party, adminViewModel, itemSize)
+                }
+            }
         }
     }
 }
@@ -181,9 +200,9 @@ fun VoteControlBtn(adminViewModel: AdminViewModel, context: Context, navControll
     }
 }
 
-@OptIn(ExperimentalStdlibApi::class)
+
 @Composable
-fun PartyCards(party: Party, adminViewModel: AdminViewModel, context: Context){
+fun PartyCards(party: Party, adminViewModel: AdminViewModel, itemSize: Dp){
 
     val randomIndex by remember {
         mutableStateOf((0..<generateRandomColor().size).random())
@@ -196,7 +215,7 @@ fun PartyCards(party: Party, adminViewModel: AdminViewModel, context: Context){
             containerColor = generateRandomColor()[randomIndex],
         ),
         modifier = Modifier
-            .padding(5.dp),
+            .padding(5.dp).size(itemSize),
         elevation = CardDefaults.cardElevation(
             defaultElevation = 6.dp
         ),
@@ -213,10 +232,12 @@ fun PartyCards(party: Party, adminViewModel: AdminViewModel, context: Context){
                         .padding(start = 16.dp),
                     textAlign = TextAlign.Center,
                     color = Color.Black,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 30.sp
                 )
                 IconButton(onClick = {
-                    adminViewModel.deleteParty(party, context)
+                    adminViewModel.selectedParty = party
+                    adminViewModel.showDialog = true
                 }) {
                     Icon(
                         Icons.Filled.Clear,
@@ -231,7 +252,7 @@ fun PartyCards(party: Party, adminViewModel: AdminViewModel, context: Context){
                 textAlign = TextAlign.Center,
                 color = Color.Black,
                 fontWeight = FontWeight.Bold,
-                fontSize = 50.sp
+                fontSize = 70.sp
             )
         }
     }

@@ -20,6 +20,8 @@ class AdminViewModel : ViewModel() {
 
     var parties : MutableList<Party> = mutableStateListOf()
     var votingStatus by mutableStateOf("")
+    var showDialog by mutableStateOf(false)
+    var selectedParty : Party? by mutableStateOf(null)
 
     init {
         getParties()
@@ -81,7 +83,7 @@ class AdminViewModel : ViewModel() {
         }
     }
 
-    fun deleteParty(party: Party, context: Context){
+    fun deleteParty(context: Context){
         if(votingStatus == "STARTED"){
             Toast.makeText(context, "Party cannot be deleted as voting is started",
                 Toast.LENGTH_SHORT)
@@ -89,12 +91,14 @@ class AdminViewModel : ViewModel() {
             return;
         }
 
+        showDialog = true;
         viewModelScope.launch {
-            val response  = RetrofitService.partyAPI.deleteParty(party.partyId)
+            val response  = RetrofitService.partyAPI.deleteParty(selectedParty!!.partyId)
 
             if(response.isSuccessful){
                 getParties()
-                Log.d("ADMINViewModel", "New party added")
+                selectedParty = Party()
+                Log.d("ADMINViewModel", "Party deleted")
             } else {
                 val error = ErrorHandlingService(response).getError()
                 Toast.makeText(context, error.message,

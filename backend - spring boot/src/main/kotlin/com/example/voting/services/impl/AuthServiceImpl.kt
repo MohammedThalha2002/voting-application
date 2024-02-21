@@ -34,7 +34,7 @@ class AuthServiceImpl(private val userRepository : UserRepository) : AuthService
             throw CustomException("User not found")
         }
 
-        if(!Bcrypt.compare(user.password, foundUsers[0].password)){
+        if(!Bcrypt.compare(user.password + user.name, foundUsers[0].password)){
             throw CustomException("Incorrect Password")
         }
 
