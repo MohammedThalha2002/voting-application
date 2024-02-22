@@ -3,7 +3,7 @@ package com.example.voting.common
 object Bcrypt{
     private const val salt : String = "23edyhr8n734irh].;po320n8d32h4h34xi2u3mqdf'cx;p[.kr,co;0,-439"
     val hash = fun(password : String) : String {
-        var hash: String = "";
+        var hash = "";
 
         val passwordWithSalt = StringBuffer()
 

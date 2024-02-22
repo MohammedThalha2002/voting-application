@@ -21,7 +21,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.votingapplication.entity.User
 import com.example.votingapplication.viewModels.AuthViewModel
-import java.lang.AssertionError
 
 @Composable
 fun LoginInput(role : String, authViewModel: AuthViewModel, navController: NavController){

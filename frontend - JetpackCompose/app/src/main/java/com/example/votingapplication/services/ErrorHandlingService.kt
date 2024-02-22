@@ -1,6 +1,5 @@
 package com.example.votingapplication.services
 
-import android.widget.Toast
 import com.example.votingapplication.entity.CustomResponse
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken

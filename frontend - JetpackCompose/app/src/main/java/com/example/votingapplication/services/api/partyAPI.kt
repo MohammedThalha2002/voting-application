@@ -2,7 +2,6 @@ package com.example.votingapplication.services.api
 
 import com.example.votingapplication.entity.CustomResponse
 import com.example.votingapplication.entity.Party
-import com.example.votingapplication.entity.User
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
