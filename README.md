@@ -5,7 +5,9 @@ For detailed documentation, please refer the [Notion Documentation](https://bill
 ## TECHNOLOGIES USED
 
 - JETPACK COMPOSE
+  - RETROFIT
 - SPRING BOOT
+  - SPRING DATA JPA
 - MY SQL
 
 ## **Features of the Voting system Application**
@@ -27,38 +29,38 @@ This provides an overview of the backend components of the Voting Application de
 ### Controllers and Functionalities
 
 1. **AuthController**
-    - **`/auth/sign-in - @POST`**
-        - Endpoint for user sign-in.
-        - Creates a new user if the username is unique.
-        - Throws an exception if the username already exists.
-    - **`/auth/login - @POST`**
-        - Endpoint for user login.
-        - Validates user credentials and returns a success message upon successful login.
+   - **`/auth/sign-in - @POST`**
+     - Endpoint for user sign-in.
+     - Creates a new user if the username is unique.
+     - Throws an exception if the username already exists.
+   - **`/auth/login - @POST`**
+     - Endpoint for user login.
+     - Validates user credentials and returns a success message upon successful login.
 2. **PartyController**
-    - **`/parties - @GET`**
-        - Endpoint to retrieve all parties.
-    - **`/party - @POST`**
-        - Endpoint to add a new party.
-        - Throws an exception if the party name already exists.
-    - **`/party/{partyId} - @DELETE`**
-        - Endpoint to delete a party by ID.
-    - **`/voting/status - @GET`**
-        - Endpoint to get the current voting status.
-    - **`/voting/status/{status} - @POST`**
-        - Endpoint to change the voting status.
-        - Updates user voting status and resets party votes when starting or ending voting.
+   - **`/parties - @GET`**
+     - Endpoint to retrieve all parties.
+   - **`/party - @POST`**
+     - Endpoint to add a new party.
+     - Throws an exception if the party name already exists.
+   - **`/party/{partyId} - @DELETE`**
+     - Endpoint to delete a party by ID.
+   - **`/voting/status - @GET`**
+     - Endpoint to get the current voting status.
+   - **`/voting/status/{status} - @POST`**
+     - Endpoint to change the voting status.
+     - Updates user voting status and resets party votes when starting or ending voting.
 3. **UserController**
-    - **`/users - @GET`**
-        - Endpoint to retrieve all users.
-    - **`/user/{userName} - @GET`**
-        - Endpoint to find a user by username.
-    - **`/user - @POST`**
-        - Endpoint to add a new user.
-    - **`/user/{userId} - @DELETE`**
-        - Endpoint to delete a user by ID.
-    - **`/user/vote/{userId}/{partyId} - @GET`**
-        - Endpoint for user voting.
-        - Updates user voting status and increments party votes.
+   - **`/users - @GET`**
+     - Endpoint to retrieve all users.
+   - **`/user/{userName} - @GET`**
+     - Endpoint to find a user by username.
+   - **`/user - @POST`**
+     - Endpoint to add a new user.
+   - **`/user/{userId} - @DELETE`**
+     - Endpoint to delete a user by ID.
+   - **`/user/vote/{userId}/{partyId} - @GET`**
+     - Endpoint for user voting.
+     - Updates user voting status and increments party votes.
 4. **Swagger UI**
 
 The application includes Swagger UI for easy development and testing. Swagger UI provides a user-friendly interface to explore and test the available endpoints.
@@ -79,9 +81,7 @@ The frontend application utilizes various additional dependencies for enhanced f
 - View Model: **`androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0`**
 - Lottie Animation: **`com.airbnb.android:lottie-compose:4.0.0`**
 - Retrofit for Networking:
-    
-    **`com.squareup.retrofit2:retrofit:2.9.0`**, **`com.squareup.retrofit2:converter-gson:2.9.0`**, **`com.squareup.okhttp3:okhttp:4.11.0`**, **`com.squareup.okhttp3:logging-interceptor:4.10.0`**
-    
+  **`com.squareup.retrofit2:retrofit:2.9.0`**, **`com.squareup.retrofit2:converter-gson:2.9.0`**, **`com.squareup.okhttp3:okhttp:4.11.0`**, **`com.squareup.okhttp3:logging-interceptor:4.10.0`**
 - Confetti Animation: **`nl.dionsegijn:konfetti-compose:2.0.4`**
 
 ### SCREENS AND VIEWMODELS
@@ -91,43 +91,33 @@ The frontend application utilizes various additional dependencies for enhanced f
 - ViewModel: **`AuthViewModel`**
 - Responsible for user authentication, sign-in, and login.
 - Displays a form for user input and buttons for sign-in and login.
-    
-    ![auth.png](images/auth.png)
-    
+  ![auth.png](images/auth.png)
 
 ### **2. Admin Panel (`AdminPanel`)**
 
 - ViewModel: **`AdminViewModel`**
 - Provides administrative functionality, including adding and deleting parties.
 - Retrieves and displays the list of parties and the current voting status.
-    
-    ![admin.png](images/admin.png)
-    
+  ![admin.png](images/admin.png)
 
 ### **3. Home Page (`HomePage`)**
 
 - ViewModel: **`HomeViewModel`**
 - Displays user-specific information, available parties, and the voting status.
 - Allows the user to vote for a selected party.
-    
-    ![home.png](images/home.png)
-    
+  ![home.png](images/home.png)
 
 ### **4. Already Voted Page (`AllReadyVotedPage`)**
 
 - ViewModel: N/A
 - Informs the user that they have already voted.
-    
-    ![already voted.png](images/already_voted.png)
-    
+  ![already voted.png](images/already_voted.png)
 
 ### **5. Result Page (`ResultPage`)**
 
 - ViewModel: **`ResultViewModel`**
 - Displays the result of the voting, including the winning party and total votes.
-    
-    ![result.png](images/result.png)
-    
+  ![result.png](images/result.png)
 
 ### ViewModel Details
 
