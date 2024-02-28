@@ -35,14 +35,18 @@ class AuthViewModel  : ViewModel() {
 
     private fun getUsers(){
         viewModelScope.launch {
-            val response = RetrofitService.authAPI.getUsers()
+            try {
+                val response = RetrofitService.authAPI.getUsers()
 
-            if(response.isSuccessful){
-                users.clear();
-                users.addAll(response.body()!!)
-                Log.d("RESPONSE", response.body().toString())
-            } else {
-                Log.d("RESPONSE-ERROR", response.errorBody().toString())
+                if(response.isSuccessful){
+                    users.clear();
+                    users.addAll(response.body()!!)
+                    Log.d("RESPONSE", response.body().toString())
+                } else {
+                    Log.d("RESPONSE-ERROR", response.errorBody().toString())
+                }
+            } catch (e : Exception){
+                Log.d("RESPONSE-ERROR", e.message.toString())
             }
         }
     }
@@ -62,14 +66,20 @@ class AuthViewModel  : ViewModel() {
         }
 
         viewModelScope.launch(handler) {
-            val response  = RetrofitService.authAPI.signIn(user)
+            try {
+                val response  = RetrofitService.authAPI.signIn(user)
 
-            if(response.isSuccessful){
-                Log.d("SignIn-AuthViewModel", "New user added")
-                navController.navigate("home/${user.name}")
-            } else {
-                val error = ErrorHandlingService(response).getError()
-                Toast.makeText(context, error.message,
+                if(response.isSuccessful){
+                    Log.d("SignIn-AuthViewModel", "New user added")
+                    navController.navigate("home/${user.name}")
+                } else {
+                    val error = ErrorHandlingService(response).getError()
+                    Toast.makeText(context, error.message,
+                        Toast.LENGTH_SHORT)
+                        .show()
+                }
+            } catch (e : Exception){
+                Toast.makeText(context, e.message,
                     Toast.LENGTH_SHORT)
                     .show()
             }
@@ -90,17 +100,23 @@ class AuthViewModel  : ViewModel() {
         }
 
         viewModelScope.launch(handler) {
-            val response = RetrofitService.authAPI.login(user)
+           try {
+               val response = RetrofitService.authAPI.login(user)
 
-            if(response.isSuccessful){
-                Log.d("SignIn-AuthViewModel", "New user added ${user.name}")
-                navController.navigate("home/${user.name}")
-            } else {
-                val error = ErrorHandlingService(response).getError()
-                Toast.makeText(context, error.message,
-                    Toast.LENGTH_SHORT)
-                    .show()
-            }
+               if(response.isSuccessful){
+                   Log.d("SignIn-AuthViewModel", "New user added ${user.name}")
+                   navController.navigate("home/${user.name}")
+               } else {
+                   val error = ErrorHandlingService(response).getError()
+                   Toast.makeText(context, error.message,
+                       Toast.LENGTH_SHORT)
+                       .show()
+               }
+           } catch (e : Exception){
+               Toast.makeText(context, e.message,
+                   Toast.LENGTH_SHORT)
+                   .show()
+           }
         }
     }
 
@@ -108,15 +124,21 @@ class AuthViewModel  : ViewModel() {
     fun deleteUser(user : User, context : Context){
 
         viewModelScope.launch {
-            val response = RetrofitService.authAPI.deleteUser(user.userId)
+            try {
+                val response = RetrofitService.authAPI.deleteUser(user.userId)
 
-            if(response.isSuccessful){
-                getUsers();
-                Log.d("AUTH RESPONSE", response.body()!!.message)
-            } else {
-                // show toast
-                val error = ErrorHandlingService(response).getError()
-                Toast.makeText(context, error.message,
+                if(response.isSuccessful){
+                    getUsers();
+                    Log.d("AUTH RESPONSE", response.body()!!.message)
+                } else {
+                    // show toast
+                    val error = ErrorHandlingService(response).getError()
+                    Toast.makeText(context, error.message,
+                        Toast.LENGTH_SHORT)
+                        .show()
+                }
+            } catch (e : Exception){
+                Toast.makeText(context, e.message,
                     Toast.LENGTH_SHORT)
                     .show()
             }

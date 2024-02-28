@@ -21,28 +21,36 @@ class ResultViewModel : ViewModel() {
 
     private fun getVotingStatus(){
         viewModelScope.launch {
-            val response = RetrofitService.partyAPI.getVotingStatus()
-            if(response.isSuccessful && response.body() != null){
-                votingStatus = response.body()!!.message
-                getWinningParties()
-            } else {
-                Log.d("RESPONSE-ERROR", response.errorBody().toString())
+            try {
+                val response = RetrofitService.partyAPI.getVotingStatus()
+                if(response.isSuccessful && response.body() != null){
+                    votingStatus = response.body()!!.message
+                    getWinningParties()
+                } else {
+                    Log.d("RESPONSE-ERROR", response.errorBody().toString())
+                }
+            } catch (e : Exception){
+                Log.d("RESPONSE-ERROR", e.message.toString())
             }
         }
     }
 
     private fun getWinningParties(){
         viewModelScope.launch {
-            val response = RetrofitService.partyAPI.getParties()
-            if(response.isSuccessful && response.body() != null){
-                var parties : List<Party1> = response.body()!!
-                parties = parties.sortedByDescending { it.totalVotes }
-                winnerParty.apply {
-                    partyName = parties[0].partyName
-                    totalVotes = parties[0].totalVotes
+            try {
+                val response = RetrofitService.partyAPI.getParties()
+                if(response.isSuccessful && response.body() != null){
+                    var parties : List<Party1> = response.body()!!
+                    parties = parties.sortedByDescending { it.totalVotes }
+                    winnerParty.apply {
+                        partyName = parties[0].partyName
+                        totalVotes = parties[0].totalVotes
+                    }
+                } else {
+                    Log.d("RESPONSE-ERROR", response.errorBody().toString())
                 }
-            } else {
-                Log.d("RESPONSE-ERROR", response.errorBody().toString())
+            } catch (e : Exception){
+                Log.d("RESPONSE-ERROR", e.message.toString())
             }
         }
     }

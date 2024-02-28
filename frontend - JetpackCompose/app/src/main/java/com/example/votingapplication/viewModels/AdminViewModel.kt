@@ -30,23 +30,31 @@ class AdminViewModel : ViewModel() {
 
     private fun getParties(){
         viewModelScope.launch {
-            val response = RetrofitService.partyAPI.getParties()
-            if(response.isSuccessful && response.body() != null){
-                parties.clear()
-                parties.addAll(response.body()!!)
-            } else {
-                Log.d("RESPONSE-ERROR", response.errorBody().toString())
+            try {
+                val response = RetrofitService.partyAPI.getParties()
+                if(response.isSuccessful && response.body() != null){
+                    parties.clear()
+                    parties.addAll(response.body()!!)
+                } else {
+                    Log.d("RESPONSE-ERROR", response.errorBody().toString())
+                }
+            } catch (e : Exception){
+                Log.d("RESPONSE-ERROR", e.message.toString())
             }
         }
     }
 
     private fun getVotingStatus(){
         viewModelScope.launch {
-            val response = RetrofitService.partyAPI.getVotingStatus()
-            if(response.isSuccessful && response.body() != null){
-                votingStatus = response.body()!!.message
-            } else {
-                Log.d("RESPONSE-ERROR", response.errorBody().toString())
+            try {
+                val response = RetrofitService.partyAPI.getVotingStatus()
+                if(response.isSuccessful && response.body() != null){
+                    votingStatus = response.body()!!.message
+                } else {
+                    Log.d("RESPONSE-ERROR", response.errorBody().toString())
+                }
+            }  catch (e : Exception){
+                Log.d("RESPONSE-ERROR", e.message.toString())
             }
         }
     }
@@ -69,14 +77,20 @@ class AdminViewModel : ViewModel() {
         }
 
         viewModelScope.launch(handler) {
-            val response  = RetrofitService.partyAPI.addParty(party)
+            try {
+                val response  = RetrofitService.partyAPI.addParty(party)
 
-            if(response.isSuccessful){
-                getParties()
-                Log.d("ADMINViewModel", "New party added")
-            } else {
-                val error = ErrorHandlingService(response).getError()
-                Toast.makeText(context, error.message,
+                if(response.isSuccessful){
+                    getParties()
+                    Log.d("ADMINViewModel", "New party added")
+                } else {
+                    val error = ErrorHandlingService(response).getError()
+                    Toast.makeText(context, error.message,
+                        Toast.LENGTH_SHORT)
+                        .show()
+                }
+            }  catch (e : Exception){
+                Toast.makeText(context, e.message,
                     Toast.LENGTH_SHORT)
                     .show()
             }
@@ -110,18 +124,24 @@ class AdminViewModel : ViewModel() {
 
     fun changeVotingState(state : String,context: Context, navController: NavController){
         viewModelScope.launch {
-            val response  = RetrofitService.partyAPI.endVoting(state)
-            if(response.isSuccessful){
-                votingStatus = state
-                if(state == "ENDED") {
-                    navController.navigate("results")
+            try {
+                val response  = RetrofitService.partyAPI.endVoting(state)
+                if(response.isSuccessful){
+                    votingStatus = state
+                    if(state == "ENDED") {
+                        navController.navigate("results")
+                    }
+                    if(state == "STARTED"){
+                        getParties()
+                    }
+                } else {
+                    val error = ErrorHandlingService(response).getError()
+                    Toast.makeText(context, error.message,
+                        Toast.LENGTH_SHORT)
+                        .show()
                 }
-                if(state == "STARTED"){
-                    getParties()
-                }
-            } else {
-                val error = ErrorHandlingService(response).getError()
-                Toast.makeText(context, error.message,
+            } catch (e : Exception){
+                Toast.makeText(context, e.message,
                     Toast.LENGTH_SHORT)
                     .show()
             }

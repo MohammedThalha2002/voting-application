@@ -31,15 +31,19 @@ class HomeViewModel(private val username: String,private val navController: NavC
     private fun getUserByUsername() {
         Log.d("USER", username)
         viewModelScope.launch {
-            val response = RetrofitService.authAPI.getUserByName(username)
-            if(response.isSuccessful && response.body() != null){
-                user = response.body()!!
-                if(user.isVoted){
-                    navController.navigate("voted")
+            try {
+                val response = RetrofitService.authAPI.getUserByName(username)
+                if(response.isSuccessful && response.body() != null){
+                    user = response.body()!!
+                    if(user.isVoted){
+                        navController.navigate("voted")
+                    }
+                    Log.e("USER RESPONSE IS", user.name)
+                } else {
+                    navController.navigate("login")
                 }
-                Log.e("USER RESPONSE IS", user.name)
-            } else {
-                navController.navigate("login")
+            } catch (e : Exception){
+                Log.d("RESPONSE-ERROR", e.message.toString())
             }
         }
     }
@@ -56,23 +60,31 @@ class HomeViewModel(private val username: String,private val navController: NavC
 
     private fun getParties(){
         viewModelScope.launch {
-            val response = RetrofitService.partyAPI.getParties()
-            if(response.isSuccessful && response.body() != null){
-                parties.clear()
-                parties.addAll(response.body()!!)
-            } else {
-                Log.d("RESPONSE-ERROR", response.errorBody().toString())
+            try {
+                val response = RetrofitService.partyAPI.getParties()
+                if(response.isSuccessful && response.body() != null){
+                    parties.clear()
+                    parties.addAll(response.body()!!)
+                } else {
+                    Log.d("RESPONSE-ERROR", response.errorBody().toString())
+                }
+            } catch (e : Exception){
+                Log.d("RESPONSE-ERROR", e.message.toString())
             }
         }
     }
 
     private fun getVotingStatus(){
         viewModelScope.launch {
-            val response = RetrofitService.partyAPI.getVotingStatus()
-            if(response.isSuccessful && response.body() != null){
-                votingStatus = response.body()!!.message
-            } else {
-                Log.d("RESPONSE-ERROR", response.errorBody().toString())
+            try {
+                val response = RetrofitService.partyAPI.getVotingStatus()
+                if(response.isSuccessful && response.body() != null){
+                    votingStatus = response.body()!!.message
+                } else {
+                    Log.d("RESPONSE-ERROR", response.errorBody().toString())
+                }
+            } catch (e : Exception){
+                Log.d("RESPONSE-ERROR", e.message.toString())
             }
         }
     }
@@ -105,12 +117,18 @@ class HomeViewModel(private val username: String,private val navController: NavC
 
     fun vote(context: Context){
         viewModelScope.launch {
-            val response = RetrofitService.partyAPI.vote(user.userId, selectedParty.partyId)
-            if(response.isSuccessful && response.body() != null){
-                navController.navigate("results")
-            } else {
-                val error = ErrorHandlingService(response).getError()
-                Toast.makeText(context, error.message,
+            try {
+                val response = RetrofitService.partyAPI.vote(user.userId, selectedParty.partyId)
+                if(response.isSuccessful && response.body() != null){
+                    navController.navigate("results")
+                } else {
+                    val error = ErrorHandlingService(response).getError()
+                    Toast.makeText(context, error.message,
+                        Toast.LENGTH_SHORT)
+                        .show()
+                }
+            } catch (e : Exception){
+                Toast.makeText(context, e.message,
                     Toast.LENGTH_SHORT)
                     .show()
             }
